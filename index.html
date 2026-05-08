@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deploy Everyday</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #00c853 0%, #00e676 50%, #69f0ae 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    padding: 20px;
+    position: relative;
+  }
+
+  .container {
+    text-align: center;
+    color: white;
+    z-index: 10;
+    max-width: 900px;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    letter-spacing: -1px;
+  }
+
+  .answer {
+    font-size: clamp(5rem, 18vw, 14rem);
+    font-weight: 900;
+    line-height: 1;
+    margin: 20px 0;
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.15), 8px 8px 30px rgba(0,0,0,0.2);
+    letter-spacing: -5px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  .day {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 300;
+    margin-bottom: 40px;
+    opacity: 0.95;
+  }
+
+  .day strong {
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+  }
+
+  .reasons {
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 40px auto;
+    max-width: 600px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  .reasons h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .reason {
+    font-size: 1.1rem;
+    margin: 12px 0;
+    padding: 10px;
+    font-weight: 400;
+  }
+
+  .reason::before {
+    content: "✓ ";
+    font-weight: bold;
+    margin-right: 8px;
+  }
+
+  .footer {
+    margin-top: 40px;
+    font-size: 0.95rem;
+    opacity: 0.85;
+    font-style: italic;
+  }
+
+  .button {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 18px 40px;
+    background: white;
+    color: #00c853;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+  }
+
+  .button:active {
+    transform: translateY(0);
+  }
+
+  .rocket {
+    position: absolute;
+    font-size: 2rem;
+    pointer-events: none;
+    animation: float 8s linear infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(100vh) rotate(-15deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100px) rotate(15deg);
+      opacity: 0;
+    }
+  }
+
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    animation: confetti-fall 3s ease-out forwards;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(0) rotate(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: rgba(255,255,255,0.15);
+    padding: 15px 25px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Should I deploy today?</h1>
+  <div class="answer">YES</div>
+  <div class="day">It's <strong id="dayName">Friday</strong>, and yes — ship it. 🚀</div>
+
+  <div class="reasons">
+    <h2>Why today is the perfect day to deploy:</h2>
+    <div class="reason">Every day is deploy day</div>
+    <div class="reason">Tests pass on your machine</div>
+    <div class="reason">Rollbacks are just deploys in reverse</div>
+    <div class="reason">YOLO is a valid engineering principle</div>
+    <div class="reason">The bug fix can wait until after deploy</div>
+    <div class="reason">Friday deploys build character</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-number" id="deploysToday">∞</span>
+      <span class="stat-label">Deploys Today</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">100%</span>
+      <span class="stat-label">Confidence</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">0</span>
+      <span class="stat-label">Regrets</span>
+    </div>
+  </div>
+
+  <button class="button" onclick="deploy()">🚀 Deploy Now</button>
+
+  <div class="footer">
+    Move fast, break things, then deploy the fix. Repeat.
+  </div>
+</div>
+
+<script>
+  // Update day name
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const today = new Date().getDay();
+  document.getElementById('dayName').textContent = days[today];
+
+  // Spawn floating rockets
+  const emojis = ['🚀', '✨', '⚡', '🔥', '💚', '✅'];
+  function spawnRocket() {
+    const rocket = document.createElement('div');
+    rocket.className = 'rocket';
+    rocket.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    rocket.style.left = Math.random() * 100 + 'vw';
+    rocket.style.animationDuration = (Math.random() * 5 + 5) + 's';
+    document.body.appendChild(rocket);
+    setTimeout(() => rocket.remove(), 13000);
+  }
+  setInterval(spawnRocket, 600);
+  for (let i = 0; i < 8; i++) setTimeout(spawnRocket, i * 200);
+
+  // Deploy button
+  let deployCount = 0;
+  function deploy() {
+    deployCount++;
+    document.getElementById('deploysToday').textContent = deployCount;
+
+    // Confetti burst
+    const colors = ['#ffeb3b', '#ff5722', '#e91e63', '#9c27b0', '#3f51b5', '#fff'];
+    for (let i = 0; i < 60; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.top = '-10px';
+      confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      confetti.style.animationDelay = Math.random() * 0.5 + 's';
+      if (Math.random() > 0.5) confetti.style.borderRadius = '50%';
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 3500);
+    }
+
+    const messages = [
+      '🚀 Shipped it!',
+      '✅ Deployed!',
+      '🔥 Live in production!',
+      '⚡ Pushed to prod!',
+      '💚 Rolled out!',
+      '✨ It\'s live!'
+    ];
+    const btn = document.querySelector('.button');
+    const original = btn.textContent;
+    btn.textContent = messages[Math.floor(Math.random() * messages.length)];
+    setTimeout(() => btn.textContent = original, 1500);
+  }
+</script>
+
+</body>
+</html>
